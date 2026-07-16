@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { softwareRecords } from "../data/software";
+import { listSoftware } from "../data/repository";
 import { SoftwareCard } from "./RecordCards";
 
 type Initial = { q?: string; category?: string; platform?: string; purpose?: string; verdict?: string; attribution?: string; format?: string; evidence?: string };
+const softwareRecords = listSoftware();
 
 export function SoftwareExplorer({ initial }: { initial: Initial }) {
   const [q, setQ] = useState(initial.q ?? "");
@@ -16,12 +17,12 @@ export function SoftwareExplorer({ initial }: { initial: Initial }) {
   const [format, setFormat] = useState(initial.format ?? "");
   const [evidence, setEvidence] = useState(initial.evidence ?? "");
 
-  const filters = { q, category, platform, purpose, verdict, attribution, format, evidence };
+  const filters = useMemo(() => ({ q, category, platform, purpose, verdict, attribution, format, evidence }), [q, category, platform, purpose, verdict, attribution, format, evidence]);
   useEffect(() => {
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => value && params.set(key, value));
     window.history.replaceState(null, "", `${window.location.pathname}${params.size ? `?${params}` : ""}`);
-  }, [q, category, platform, purpose, verdict, attribution, format, evidence]);
+  }, [filters]);
 
   const results = useMemo(() => softwareRecords.filter((record) => {
     const haystack = [record.name, record.developer, record.category, ...record.supportedPlatforms, ...record.outputFormats, ...record.useCases.flatMap((u) => [u.useCase, u.note])].join(" ").toLocaleLowerCase("ja");
@@ -43,7 +44,7 @@ export function SoftwareExplorer({ initial }: { initial: Initial }) {
         <div className="filter-title"><h2 id="software-filter-heading">絞り込み</h2><button type="button" onClick={clear}>条件をすべて解除</button></div>
         <div className="filter-grid filter-grid-software">
           <label className="filter-search"><span>部分一致検索</span><input className="filter-control" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="製品名、開発元、用途、形式" /></label>
-          <FilterSelect label="カテゴリ" value={category} onChange={setCategory} options={["動画編集", "日本語音声合成・TTS"]} />
+          <FilterSelect label="カテゴリ" value={category} onChange={setCategory} options={["動画編集", "日本語音声合成・TTS", "配信・録音アプリ"]} />
           <FilterSelect label="OS / プラットフォーム" value={platform} onChange={setPlatform} options={["Windows", "macOS", "Linux", "iPadOS"]} />
           <FilterSelect label="利用目的" value={purpose} onChange={setPurpose} options={["YouTube収益化", "クライアント納品", "ゲーム組み込み"]} />
           <FilterSelect label="商用利用状態" value={verdict} onChange={setVerdict} options={["適合", "条件付き適合", "不適合", "未確認"]} />

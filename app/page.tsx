@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { softwareRecords } from "../data/software";
-import { setupRecords } from "../data/setups";
+import { listSetups, listSoftware } from "../data/repository";
 import { EvidenceBadge, VerdictBadge } from "../components/Badges";
 
 const chips = ["YouTube収益化", "ライブ配信", "音声収録", "クライアント納品", "ゲーム組み込み"];
 
 export default function Home() {
+  const softwareRecords = listSoftware();
+  const setupRecords = listSetups();
   const [mode, setMode] = useState<"software" | "setup">("software");
   const [query, setQuery] = useState("");
 

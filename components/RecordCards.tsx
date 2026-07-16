@@ -1,10 +1,11 @@
 import Link from "next/link";
 import type { SetupRecord, SoftwareRecord } from "../data/models";
 import { EvidenceBadge, VerdictBadge } from "./Badges";
+import { StackToggleButton } from "./StackToggleButton";
 
 export function SoftwareCard({ record }: { record: SoftwareRecord }) {
   return (
-    <article className="result-card">
+    <article className="result-card" data-testid={`record-${record.id}`}>
       <div className="card-topline"><span className="record-type">{record.category}</span><VerdictBadge verdict={record.verdict} /></div>
       <h2><Link href={`/softwares/${record.slug}`}>{record.name}</Link></h2>
       <p className="developer">{record.developer} ・ {record.supportedPlatforms.join(" / ")}</p>
@@ -15,6 +16,7 @@ export function SoftwareCard({ record }: { record: SoftwareRecord }) {
       <div className="tag-row">{record.outputFormats.slice(0, 4).map((item) => <span key={item}>{item}</span>)}</div>
       <div className="evidence-line"><EvidenceBadge evidence={record.evidenceType} /><time dateTime={record.verifiedAt}>確認 {record.verifiedAt}</time></div>
       <div className="card-actions">
+        <StackToggleButton id={record.id} compact />
         <Link href={`/softwares/${record.slug}`}>条件と根拠を見る →</Link>
         <Link href={`/compare?ids=${record.id}`}>比較に追加</Link>
       </div>
@@ -24,7 +26,7 @@ export function SoftwareCard({ record }: { record: SoftwareRecord }) {
 
 export function SetupCard({ record }: { record: SetupRecord }) {
   return (
-    <article className="result-card">
+    <article className="result-card" data-testid={`record-${record.id}`}>
       <div className="card-topline"><span className="record-type">{record.useCase}</span><VerdictBadge verdict={record.verdict} /></div>
       <h2><Link href={`/setups/${record.slug}`}>{record.title}</Link></h2>
       <p>{record.summary}</p>
@@ -35,7 +37,7 @@ export function SetupCard({ record }: { record: SetupRecord }) {
         <div><dt>ループバック</dt><dd>{record.loopbackSupport}</dd></div>
       </dl>
       <div className="evidence-line"><EvidenceBadge evidence={record.evidenceType} /><time dateTime={record.testedAt}>確認 {record.testedAt}</time></div>
-      <div className="card-actions"><Link href={`/setups/${record.slug}`}>経路と成立条件を見る →</Link></div>
+      <div className="card-actions"><StackToggleButton id={record.id} compact /><Link href={`/setups/${record.slug}`}>経路と成立条件を見る →</Link></div>
     </article>
   );
 }

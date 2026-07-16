@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 async function render(path = "/") {
@@ -34,6 +34,9 @@ test("renders core list, detail, comparison and policy routes", async () => {
     ["/setups/iphone-youtube-live-ag03mk2", /信号経路/],
     ["/compare?ids=sw-voicevox,sw-premiere", /比較結果/],
     ["/policy", /検証方針・運営ポリシー/],
+    ["/my-stack", /My Stack/],
+    ["/status", /今日の制作環境/],
+    ["/changes", /変更レーダー/],
   ];
   for (const [path, expected] of cases) {
     const response = await render(path);
@@ -42,14 +45,27 @@ test("renders core list, detail, comparison and policy routes", async () => {
   }
 });
 
-test("ships four sourced software records and four sourced setup records", async () => {
+test("ships eight sourced software records and eight sourced setup records", async () => {
   const [software, setups] = await Promise.all([
     readFile(new URL("../data/software.ts", import.meta.url), "utf8"),
     readFile(new URL("../data/setups.ts", import.meta.url), "utf8"),
   ]);
-  assert.equal((software.match(/id: "sw-/g) ?? []).length, 4);
-  assert.equal((setups.match(/id: "setup-/g) ?? []).length, 4);
-  assert.equal((`${software}${setups}`.match(/sourceUrls: \[/g) ?? []).length, 8);
-  assert.equal((`${software}${setups}`.match(/(?:verifiedAt|testedAt): "2026-07-16"/g) ?? []).length, 8);
+  assert.equal((software.match(/id: "sw-/g) ?? []).length, 8);
+  assert.equal((setups.match(/id: "setup-/g) ?? []).length, 8);
+  assert.equal((`${software}${setups}`.match(/sourceUrls: \[/g) ?? []).length, 16);
+  assert.equal((`${software}${setups}`.match(/(?:verifiedAt|testedAt): "2026-07-16"/g) ?? []).length, 16);
+  assert.equal((`${software}${setups}`.match(/freshness: \{/g) ?? []).length, 16);
+  assert.equal((`${software}${setups}`.match(/physicalTested: false/g) ?? []).length, 16);
   assert.doesNotMatch(`${software}${setups}`, /evidenceType: "実機検証済み"/);
+});
+
+test("keeps UI behind the catalog repository boundary", async () => {
+  const roots = [new URL("../app/", import.meta.url), new URL("../components/", import.meta.url)];
+  for (const root of roots) {
+    for (const relative of await readdir(root, { recursive: true })) {
+      if (!/\.(?:ts|tsx)$/.test(relative)) continue;
+      const source = await readFile(new URL(relative.replaceAll("\\", "/"), root), "utf8");
+      assert.doesNotMatch(source, /data\/(?:software|setups)/, relative);
+    }
+  }
 });

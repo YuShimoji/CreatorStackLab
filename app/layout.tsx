@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MyStackProvider } from "../components/MyStackProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,9 +22,12 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
+  ["今日", "/status"],
+  ["My Stack", "/my-stack"],
   ["ソフト適合", "/softwares"],
   ["構成適合", "/setups"],
   ["比較", "/compare"],
+  ["変更", "/changes"],
   ["検証方針", "/policy"],
 ] as const;
 
@@ -31,6 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ja">
       <body>
+        <MyStackProvider>
         <a className="skip-link" href="#main-content">本文へ移動</a>
         <header className="site-header">
           <div className="header-inner">
@@ -50,6 +55,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <p>このサイトは法的助言ではありません。重要な利用前には原文と提供元へ再確認してください。</p>
           </div>
         </footer>
+        </MyStackProvider>
       </body>
     </html>
   );

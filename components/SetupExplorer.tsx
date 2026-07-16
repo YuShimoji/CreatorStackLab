@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { setupRecords } from "../data/setups";
+import { listSetups } from "../data/repository";
 import { SetupCard } from "./RecordCards";
 
 type Initial = { q?: string; purpose?: string; device?: string; os?: string; app?: string; interface?: string; power?: string; stereo?: string; loopback?: string; evidence?: string; verdict?: string };
+const setupRecords = listSetups();
 
 export function SetupExplorer({ initial }: { initial: Initial }) {
   const [filters, setFilters] = useState<Required<Initial>>({ q: "", purpose: "", device: "", os: "", app: "", interface: "", power: "", stereo: "", loopback: "", evidence: "", verdict: "", ...initial });
@@ -38,10 +39,10 @@ export function SetupExplorer({ initial }: { initial: Initial }) {
         <div className="filter-grid">
           <label className="filter-search"><span>部分一致検索</span><input className="filter-control" type="search" value={filters.q} onChange={(e) => set("q")(e.target.value)} placeholder="端末、アプリ、インターフェース" /></label>
           <SetupSelect label="利用目的" value={filters.purpose} onChange={set("purpose")} options={["ライブ配信", "音声収録"]} />
-          <SetupSelect label="端末" value={filters.device} onChange={set("device")} options={["Windows", "iPhone", "Android"]} />
-          <SetupSelect label="OS" value={filters.os} onChange={set("os")} options={["Windows 11", "iOS", "Android"]} />
-          <SetupSelect label="アプリ" value={filters.app} onChange={set("app")} options={["OBS Studio", "YouTube Live", "GarageBand"]} />
-          <SetupSelect label="オーディオI/F" value={filters.interface} onChange={set("interface")} options={["AG03MK2", "GO:MIXER PRO-X"]} />
+          <SetupSelect label="端末" value={filters.device} onChange={set("device")} options={["Windows", "Mac", "iPhone", "iPad", "Android"]} />
+          <SetupSelect label="OS" value={filters.os} onChange={set("os")} options={["Windows 11", "macOS", "iOS", "iPadOS", "Android"]} />
+          <SetupSelect label="アプリ" value={filters.app} onChange={set("app")} options={["OBS Studio", "YouTube Live", "GarageBand", "Cubasis"]} />
+          <SetupSelect label="オーディオI/F" value={filters.interface} onChange={set("interface")} options={["AG03MK2", "GO:MIXER PRO-X", "UR22C"]} />
           <SetupSelect label="給電方法" value={filters.power} onChange={set("power")} options={["USBバスパワー", "USB電源", "単4電池"]} />
           <SetupSelect label="ステレオ" value={filters.stereo} onChange={set("stereo")} options={["対応", "未確認"]} />
           <SetupSelect label="ループバック" value={filters.loopback} onChange={set("loopback")} options={["対応", "OFF", "未確認"]} />

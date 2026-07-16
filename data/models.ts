@@ -14,6 +14,14 @@ export type SourceLink = {
   type: LinkType;
 };
 
+export type CatalogKind = "software" | "service" | "hardware" | "setup";
+
+export type Freshness = {
+  recheckAt: string;
+  physicalTested: boolean;
+  unknowns: string[];
+};
+
 export type RevisionEntry = {
   date: string;
   summary: string;
@@ -30,7 +38,7 @@ export type SoftwareRecord = {
   slug: string;
   name: string;
   developer: string;
-  category: "動画編集" | "日本語音声合成・TTS";
+  category: "動画編集" | "日本語音声合成・TTS" | "配信・録音アプリ";
   supportedPlatforms: string[];
   plans: string[];
   useCases: UseCaseVerdict[];
@@ -50,6 +58,7 @@ export type SoftwareRecord = {
   verifiedAt: string;
   sourceUrls: SourceLink[];
   revisionHistory: RevisionEntry[];
+  freshness: Freshness;
 };
 
 export type SetupRecord = {
@@ -79,4 +88,72 @@ export type SetupRecord = {
   testedAt: string;
   sourceUrls: SourceLink[];
   revisionHistory: RevisionEntry[];
+  freshness: Freshness;
+};
+
+export type CatalogItem = {
+  id: string;
+  kind: CatalogKind;
+  name: string;
+  href: string;
+  verdict: Verdict;
+  summary: string;
+  verifiedAt: string;
+  recheckAt: string;
+  physicalTested: boolean;
+};
+
+export type ServiceStatus =
+  | "operational"
+  | "degraded"
+  | "partial_outage"
+  | "major_outage"
+  | "maintenance"
+  | "unknown";
+
+export type SourceMode = "official_live" | "official_document" | "sample";
+export type Severity = "critical" | "high" | "medium" | "low" | "info";
+
+export type StatusRecord = {
+  id: string;
+  catalogId: string;
+  subject: string;
+  impactedFeature: string;
+  status: ServiceStatus;
+  observedAt: string;
+  checkedAt: string;
+  sourceMode: SourceMode;
+  source: SourceLink;
+  note: string;
+};
+
+export type ChangeType =
+  | "pricing"
+  | "plan"
+  | "commercial_terms"
+  | "attribution"
+  | "supported_os"
+  | "output_format"
+  | "api_limit"
+  | "feature_added"
+  | "feature_removed"
+  | "support_ended"
+  | "service_ended"
+  | "compatibility";
+
+export type ChangeRecord = {
+  id: string;
+  catalogId: string;
+  subject: string;
+  changedAt: string;
+  detectedAt: string;
+  type: ChangeType;
+  severity: Severity;
+  before: string;
+  after: string;
+  impact: string;
+  sourceMode: Exclude<SourceMode, "official_live">;
+  source: SourceLink;
+  confirmation: "confirmed" | "needs_review";
+  historyHref: string;
 };
