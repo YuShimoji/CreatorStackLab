@@ -86,3 +86,25 @@ test("keeps UI behind the catalog repository boundary", async () => {
     }
   }
 });
+
+test("renders Evidence Passport for connected entities and an unknown boundary elsewhere", async () => {
+  for (const path of ["/softwares/obs-studio", "/softwares/voicevox", "/setups/ipad-usbc-youtube-live-ag03mk2"]) {
+    const response = await render(path);
+    assert.equal(response.status, 200, path);
+    const html = await response.text();
+    assert.match(html, /EVIDENCE PASSPORT v0/, path);
+    assert.match(html, /現在確認できること/, path);
+    assert.match(html, /条件と限界/, path);
+    assert.match(html, /変更履歴/, path);
+    assert.match(html, /運営者実機試験/, path);
+  }
+
+  const sourceLess = await render("/softwares/adobe-premiere");
+  const sourceLessHtml = await sourceLess.text();
+  assert.match(sourceLessHtml, /現在のSource Registryへ直接接続できるClaimがありません/);
+
+  const passportSource = await readFile(new URL("../components/EvidencePassport.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(passportSource, /承認|却下|差し替え/);
+  assert.match(passportSource, /取得失敗・最終成功値を保持/);
+  assert.match(passportSource, /サービス障害とは判定していません/);
+});

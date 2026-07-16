@@ -303,6 +303,28 @@ async function observationSnapshot(db: D1Database) {
     JOIN change_events c ON c.id = q.change_event_id JOIN sources s ON s.id = c.source_id
     WHERE q.status = 'pending' ORDER BY q.created_at DESC LIMIT 20
   `).all<Record<string, unknown>>();
+  const historyResult = await db.prepare(`
+    SELECT o.id, o.source_id, s.entity_id, s.title, s.url, o.observed_at,
+      o.fetch_status, o.http_status, c.id AS change_event_id, c.review_status,
+      c.changed_fields,
+      CASE
+        WHEN o.fetch_status = 'error' THEN 'fetch_failed'
+        WHEN c.review_status = 'pending' THEN 'review_pending'
+        WHEN c.id IS NOT NULL THEN 'changed'
+        WHEN NOT EXISTS (
+          SELECT 1 FROM observations prior
+          WHERE prior.source_id = o.source_id
+            AND prior.observed_at < o.observed_at
+            AND prior.fetch_status IN ('success', 'not_modified')
+            AND prior.content_hash IS NOT NULL
+        ) THEN 'baseline'
+        ELSE 'unchanged'
+      END AS outcome
+    FROM observations o
+    JOIN sources s ON s.id = o.source_id
+    LEFT JOIN change_events c ON c.observation_id = o.id
+    ORDER BY o.observed_at DESC LIMIT 60
+  `).all<Record<string, unknown>>();
   const changes = (changesResult.results ?? []).map(mapChange);
   const reviews = (reviewsResult.results ?? []).map(mapReview);
   const enabled = sources.filter((source) => source.status !== "disabled");
@@ -326,6 +348,7 @@ async function observationSnapshot(db: D1Database) {
     changes,
     reviews,
     runs: (runsResult.results ?? []).map(mapRun),
+    history: (historyResult.results ?? []).map(mapHistory),
   };
 }
 
@@ -351,6 +374,23 @@ function mapReview(row: Record<string, unknown>) {
     id: row.id, changeEventId: row.change_event_id, entityId: row.entity_id,
     sourceId: row.source_id, sourceTitle: row.title, sourceUrl: row.url,
     reason: row.reason, requiredAction: row.required_action, status: row.status, createdAt: row.created_at,
+  };
+}
+
+function mapHistory(row: Record<string, unknown>) {
+  return {
+    id: row.id,
+    sourceId: row.source_id,
+    entityId: row.entity_id,
+    sourceTitle: row.title,
+    sourceUrl: row.url,
+    observedAt: row.observed_at,
+    fetchStatus: row.fetch_status,
+    httpStatus: row.http_status,
+    outcome: row.outcome,
+    changeEventId: row.change_event_id,
+    reviewStatus: row.review_status,
+    changedFields: parseArray(row.changed_fields),
   };
 }
 

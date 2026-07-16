@@ -3,8 +3,11 @@ import Link from "next/link";
 import { MyStackProvider } from "../components/MyStackProvider";
 import "./globals.css";
 
+const siteUrl = new URL("https://creator-stack-lab.thankyoukass.chatgpt.site");
+const socialImage = new URL("/og.png", siteUrl).toString();
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://creator-stack-lab.thankyoukass.chatgpt.site"),
+  metadataBase: siteUrl,
   title: {
     default: "Creator Stack Lab｜制作環境の適合性を確認",
     template: "%s｜Creator Stack Lab",
@@ -12,11 +15,12 @@ export const metadata: Metadata = {
   description: "制作ソフトの権利・出力条件と、配信・録音機材の構成適合を、公式情報と検証状態から確認するデータベース。",
   openGraph: {
     title: "Creator Stack Lab",
-    description: "作ったものを使えるか。手元の構成で動くか。公式情報と検証状態から確認する。",
+    description: "Evidence Passportで、何が確認でき、何が未確認かを出典・条件・鮮度とともに追跡する。",
     type: "website",
     locale: "ja_JP",
+    images: [{ url: socialImage, width: 1734, height: 907, alt: "Creator Stack Lab — Evidence Passport" }],
   },
-  twitter: { card: "summary", title: "Creator Stack Lab" },
+  twitter: { card: "summary_large_image", title: "Creator Stack Lab — Evidence Passport", images: [socialImage] },
   alternates: { canonical: "/" },
   robots: { index: false, follow: false },
 };

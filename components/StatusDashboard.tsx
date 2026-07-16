@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { listCatalog, listChanges, listStatuses } from "../data/repository";
+import { findCatalogItem, listCatalog, listChanges, listStatuses } from "../data/repository";
 import type { ObservationSourceView, ServiceStatus } from "../data/models";
 import { ObservationRunControl } from "./ObservationRunControl";
 import { useMyStack } from "./MyStackProvider";
@@ -86,6 +86,7 @@ function ObservationMetric({ label, value, note, attention = false }: { label: s
 
 function ObservationSourceCard({ source }: { source: ObservationSourceView }) {
   const facts = source.observed;
+  const catalog = findCatalogItem(source.entityId);
   const official = typeof facts.officialStatus === "string" ? statusLabels[facts.officialStatus as ServiceStatus] ?? facts.officialStatus : null;
   const version = typeof facts.version === "string" ? facts.version : null;
   const description = typeof facts.statusDescription === "string" ? facts.statusDescription : null;
@@ -102,7 +103,7 @@ function ObservationSourceCard({ source }: { source: ObservationSourceView }) {
       <div><dt>次回目標</dt><dd>{formatMoment(source.nextDueAt)}</dd></div>
       <div><dt>freshness</dt><dd>{healthLabels[source.status]}</dd></div>
     </dl>
-    <a href={typeof facts.sourceUrl === "string" ? facts.sourceUrl : source.url} target="_blank" rel="noopener noreferrer">{source.publisher} 公式ソース ↗</a>
+    <div className="observation-source-actions"><a href={typeof facts.sourceUrl === "string" ? facts.sourceUrl : source.url} target="_blank" rel="noopener noreferrer">{source.publisher} 公式ソース ↗</a>{catalog && <Link href={`${catalog.href}#evidence-passport-heading`}>判断根拠を見る →</Link>}</div>
   </article>;
 }
 

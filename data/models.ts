@@ -103,6 +103,81 @@ export type CatalogItem = {
   physicalTested: boolean;
 };
 
+export type EvidenceOrigin =
+  | "official_publisher"
+  | "official_project"
+  | "third_party_field_report"
+  | "operator_field_test";
+
+export type EvidenceMethod =
+  | "status_api"
+  | "release_feed"
+  | "official_terms"
+  | "compatibility_document"
+  | "field_test";
+
+export type EpistemicStatus =
+  | "officially_stated"
+  | "observed_current"
+  | "conditional"
+  | "unknown"
+  | "conflicted"
+  | "stale";
+
+export type Claim = {
+  claimId: string;
+  entityId: string;
+  topic: string;
+  statement: string;
+  epistemicStatus: EpistemicStatus;
+  scope: string;
+  applicableVersions: string[];
+  applicablePlatforms: string[];
+  evidenceRefs: string[];
+  operatorTested: boolean;
+  lastReviewedAt: string;
+  conditions: string[];
+  unknowns: string[];
+  doesNotEstablish: string[];
+  observationBinding?: {
+    sourceId: string;
+    field: string;
+    label: string;
+  };
+};
+
+export type EvidenceReference = {
+  evidenceId: string;
+  entityId: string;
+  origin: EvidenceOrigin;
+  method: EvidenceMethod;
+  publisher: string;
+  sourceUrl: string;
+  sourceId?: string;
+  observationId?: string;
+  observedAt?: string;
+  appliesTo: string;
+  summary: string;
+  contentHash?: string;
+  receiptReference?: string;
+};
+
+export type EvidenceCoverage = {
+  operatorFieldTest: boolean;
+  officialDocumentation: boolean;
+  publisherTestInformation: boolean;
+  thirdPartyFieldReports: boolean;
+  conditionsIdentified: boolean;
+};
+
+export type EvidencePassportBundle = {
+  entityId: string;
+  claims: Claim[];
+  evidence: EvidenceReference[];
+  coverage: EvidenceCoverage;
+  catalogHistory: RevisionEntry[];
+};
+
 export type ServiceStatus =
   | "operational"
   | "degraded"
@@ -217,6 +292,21 @@ export type ObservationRunView = {
   status: "running" | "completed" | "partial" | "failed";
 };
 
+export type ObservationHistoryView = {
+  id: string;
+  sourceId: string;
+  entityId: string;
+  sourceTitle: string;
+  sourceUrl: string;
+  observedAt: string;
+  fetchStatus: "success" | "not_modified" | "error";
+  httpStatus: number | null;
+  outcome: "baseline" | "unchanged" | "changed" | "fetch_failed" | "review_pending";
+  changeEventId: string | null;
+  reviewStatus: ObservationChangeView["reviewStatus"] | null;
+  changedFields: string[];
+};
+
 export type ObservationSnapshot = {
   generatedAt: string;
   automation: { mode: "manual_owner"; scheduled: false; note: string };
@@ -234,4 +324,5 @@ export type ObservationSnapshot = {
   changes: ObservationChangeView[];
   reviews: ObservationReviewView[];
   runs: ObservationRunView[];
+  history: ObservationHistoryView[];
 };
