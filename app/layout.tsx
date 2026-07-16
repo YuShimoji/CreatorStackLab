@@ -3,7 +3,7 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://creator-stack-lab.invalid"),
+  metadataBase: new URL("https://creator-stack-lab.thankyoukass.chatgpt.site"),
   title: {
     default: "Creator Stack Lab｜制作環境の適合性を確認",
     template: "%s｜Creator Stack Lab",
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     locale: "ja_JP",
   },
   twitter: { card: "summary", title: "Creator Stack Lab" },
+  alternates: { canonical: "/" },
   robots: { index: false, follow: false },
 };
 
