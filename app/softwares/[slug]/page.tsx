@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EvidenceBadge, VerdictBadge } from "../../../components/Badges";
 import { StackToggleButton } from "../../../components/StackToggleButton";
+import { ObservationHistory } from "../../../components/ObservationHistory";
 import { findSoftwareBySlug, listSoftware } from "../../../data/repository";
 
 export function generateStaticParams() { return listSoftware().map((record) => ({ slug: record.slug })); }
@@ -47,7 +48,7 @@ export default async function SoftwareDetailPage({ params }: { params: Promise<{
             <div><dt>オフライン利用</dt><dd>{record.offlineAvailability}</dd></div>
           </dl></section>
           <section><h2>鮮度と未知</h2><dl className="definition-ledger"><div><dt>再確認期限</dt><dd>{record.freshness.recheckAt}</dd></div><div><dt>物理テスト</dt><dd>{record.freshness.physicalTested ? "実施済み" : "未実施"}</dd></div><div><dt>未知の項目</dt><dd>{record.freshness.unknowns.join(" / ")}</dd></div></dl></section>
-          <section id="history"><h2>変更履歴</h2><ol className="history-list">{record.revisionHistory.map((item) => <li key={`${item.date}-${item.summary}`}><time dateTime={item.date}>{item.date}</time><span>{item.summary}</span></li>)}</ol></section>
+          <section id="history"><h2>変更履歴</h2><ol className="history-list">{record.revisionHistory.map((item) => <li key={`${item.date}-${item.summary}`}><time dateTime={item.date}>{item.date}</time><span>{item.summary}</span></li>)}</ol><ObservationHistory entityId={record.id} /></section>
         </article>
         <aside className="source-panel"><h2>公式出典</h2><p>規約は更新されます。利用直前に原文を再確認してください。</p><ul>{record.sourceUrls.map((source) => <li key={source.url}><span>{source.type}</span><a href={source.url} target="_blank" rel="noopener noreferrer">{source.label} ↗</a></li>)}</ul><StackToggleButton id={record.id} /><Link className="primary-button inline-button" href={`/compare?ids=${record.id}`}>比較に追加</Link></aside>
       </div>

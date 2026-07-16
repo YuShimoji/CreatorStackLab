@@ -45,6 +45,23 @@ test("renders core list, detail, comparison and policy routes", async () => {
   }
 });
 
+test("renders real-observation controls while separating samples and registered documents", async () => {
+  const statusSource = await readFile(new URL("../components/StatusDashboard.tsx", import.meta.url), "utf8");
+  assert.match(statusSource, /REAL SOURCES/);
+  assert.match(statusSource, /公式ソースの現在値/);
+  assert.match(statusSource, /表示サンプル/);
+  assert.match(statusSource, /実データと集計を分離/);
+
+  const runControl = await readFile(new URL("../components/ObservationRunControl.tsx", import.meta.url), "utf8");
+  assert.match(runControl, /公式ソースをいま確認/);
+
+  const changes = await render("/changes");
+  const changesHtml = await changes.text();
+  assert.match(changesHtml, /実観測：D1の差分/);
+  assert.match(changesHtml, /公式文書：登録済み事実/);
+  assert.match(changesHtml, /取得失敗：サービス障害と分離/);
+});
+
 test("ships eight sourced software records and eight sourced setup records", async () => {
   const [software, setups] = await Promise.all([
     readFile(new URL("../data/software.ts", import.meta.url), "utf8"),

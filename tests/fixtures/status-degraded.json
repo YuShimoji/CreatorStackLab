@@ -1,0 +1,11 @@
+{
+  "page": {
+    "name": "Twitch",
+    "url": "https://status.twitch.com",
+    "updated_at": "2026-07-16T08:00:00.000Z"
+  },
+  "status": {
+    "indicator": "minor",
+    "description": "Degraded Performance"
+  }
+}

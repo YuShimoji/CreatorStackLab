@@ -1,0 +1,11 @@
+{
+  "page": {
+    "name": "Twitch",
+    "url": "https://status.twitch.com",
+    "updated_at": "2026-07-16T07:00:56.893Z"
+  },
+  "status": {
+    "indicator": "none",
+    "description": "All Systems Operational"
+  }
+}

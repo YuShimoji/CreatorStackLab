@@ -157,3 +157,81 @@ export type ChangeRecord = {
   confirmation: "confirmed" | "needs_review";
   historyHref: string;
 };
+
+export type ObservationSourceView = {
+  id: string;
+  entityId: string;
+  title: string;
+  url: string;
+  sourceType: string;
+  publisher: string;
+  status: "healthy" | "stale" | "fetch_failed" | "disabled" | "unknown";
+  fetchStatus: "success" | "not_modified" | "error" | null;
+  httpStatus: number | null;
+  lastCheckedAt: string | null;
+  lastSuccessfulFetchAt: string | null;
+  lastChangedAt: string | null;
+  nextDueAt: string | null;
+  cadenceSeconds: number;
+  staleAfterSeconds: number;
+  observed: Record<string, unknown>;
+};
+
+export type ObservationChangeView = {
+  id: string;
+  sourceId: string;
+  entityId: string;
+  sourceTitle: string;
+  sourceUrl: string;
+  detectedAt: string;
+  changedFields: string[];
+  previousValues: Record<string, unknown>;
+  newValues: Record<string, unknown>;
+  materiality: "cosmetic" | "factual_noncritical" | "compatibility_relevant" | "commercial_terms_relevant" | "potentially_breaking";
+  reviewStatus: "auto_applied" | "pending" | "approved" | "rejected" | "superseded";
+};
+
+export type ObservationReviewView = {
+  id: string;
+  changeEventId: string;
+  entityId: string;
+  sourceId: string;
+  sourceTitle: string;
+  sourceUrl: string;
+  reason: string;
+  requiredAction: string;
+  status: "pending";
+  createdAt: string;
+};
+
+export type ObservationRunView = {
+  id: string;
+  triggerType: "manual_owner";
+  startedAt: string;
+  finishedAt: string | null;
+  sourceCount: number;
+  successCount: number;
+  unchangedCount: number;
+  changedCount: number;
+  failureCount: number;
+  status: "running" | "completed" | "partial" | "failed";
+};
+
+export type ObservationSnapshot = {
+  generatedAt: string;
+  automation: { mode: "manual_owner"; scheduled: false; note: string };
+  totals: {
+    realSourceCount: number;
+    sampleCount: number;
+    lastObservedAt: string | null;
+    lastChangedAt: string | null;
+    changedCount: number;
+    pendingReviewCount: number;
+    failureCount: number;
+    staleCount: number;
+  };
+  sources: ObservationSourceView[];
+  changes: ObservationChangeView[];
+  reviews: ObservationReviewView[];
+  runs: ObservationRunView[];
+};
