@@ -1,8 +1,36 @@
 # Creator Stack Lab — Project Handoff
 
-最終更新: 2026-07-17 (Asia/Tokyo)
+最終更新: 2026-07-18 (Asia/Tokyo)
 
 この文書は、別端末・別セッションから Creator Stack Lab / Creator Stack Observatory の作業を再開するための運用上の正本です。製品境界の正本は [`PRODUCT_BOUNDARY.md`](./PRODUCT_BOUNDARY.md) であり、ここでは重複定義せず、現在状態、実装構造、検証済み事実、配備境界、次の作業を記録します。状態が変わった場合は新しい引き継ぎ文書を増やさず、このファイルを更新してください。
+
+## 2026-07-18 再開監査 / 監修AI向け現状報告
+
+2026-07-18 (Asia/Tokyo) に GitHub `origin` を `fetch --prune` し、local `master` と `origin/master` が同一の `eca336d15d48cc2b08533a79ff2bb17d7f8a79da`、ahead 0 / behind 0 であることを確認した。取り込むべきリモート差分はなく、Feature baseline `278f507` 以降は引き継ぎ文書の追加だけで、製品コードの追加変更はない。
+
+現在のNorth Starは、公式情報と外部証拠を、出典、条件、鮮度、変更履歴、未知とともに提示するowner-onlyの制作判断観測所である。現在の開発軸は Evidence Passport v0 完了後の **My Stack単位の変更要約 v0**。この次スライスは未着手であり、最大のdelivery gapは、保存した複数entityについて「前回訪問後に何を見るべきか」をentity単位で安全に要約する体験がまだないこと。詳細要件は後段の「次に実行するスライス」を正本とする。
+
+### ローカル開発準備
+
+| Gate | 2026-07-18の結果 |
+|---|---|
+| Runtime | Node.js `v24.13.0`、npm `11.6.2`。要件 Node.js `>=22.13.0` を満たす |
+| Install | `npm ci` 成功。lockfileどおり506 packagesを再現 |
+| Production build | `npm test` 内の `vinext build` 成功 |
+| Automated tests | 21 / 21成功。rendered 6、Evidence / Observation 15 |
+| Static gates | `npm run lint`、`npx tsc --noEmit`、同期直後の `git diff --check` 成功 |
+| Local runtime smoke | `npm run dev -- --host 127.0.0.1` で起動し、`http://localhost:3000/` がHTTP 200、Creator Stack識別子あり。確認後にプロセス停止 |
+| Git worktree | 監査開始時はtracked差分なし。端末固有の `.serena/` は内容を削除せず `.git/info/exclude` だけでlocal除外 |
+
+### 残作業と証拠境界
+
+| 目的 | 影響 | 要件 | 状態 | Owner | 次の一手 |
+|---|---|---|---|---|---|
+| production依存の脆弱性を解消する | `npm audit --omit=dev` はmoderate 2件。`next@16.2.6` 同梱の `postcss@8.4.31` が `<8.5.10` のadvisory対象 | Next / vinext互換性とbuild・21 tests・owner-only回帰を維持する。監査が提示するNext 9.3.3への大幅downgradeは採用しない | 未解消。同期・再開を妨げるbuild failureではないが、production security maintenanceとして残る | 次回の依存保守担当（監修AIが割当） | vinext / Next側の互換修正版または安全なoverride可否を調査し、独立スライスで更新・全gate再検証 |
+| 開発依存の監査警告を整理する | 全依存ではlow 1、moderate 7、high 6。主にCloudflare / Vite / Wrangler / Drizzle toolchainの推移依存 | runtimeとSites build互換性を維持し、一括force fixを避ける | 未解消。現在のbuild・test・dev serverは成功 | 次回の依存保守担当（監修AIが割当） | direct dependencyごとに非major更新を分け、auditと全gateを再実行 |
+| Sites mirror / production parityを再確認する | この端末には `sites` remoteがなく、Sites `main`、owner表示、匿名401は今回live再検証していない | 既存Siteの短期source credentialとowner session。tokenを保存しない | 未確認。過去の検証済み状態を現在のproduction事実として再主張しない | 配備権限を持つ担当 | 次回の配備前にGitHub SHA = Sites SHA、owner-only、許可ユーザー1名、匿名401をlive確認 |
+
+監修判断として、ローカルは次スライスの実装を開始できる。依存監査とSites live parityは隠さず別ゲートとして保持し、My Stack変更要約へ混ぜない。READMEは製品名、正本、再開コマンドが最初に見えるよう2026-07-18にスターター文面から更新した。
 
 ## 最短の再開手順
 
