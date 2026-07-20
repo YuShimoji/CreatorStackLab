@@ -16,7 +16,7 @@ npm run dev
 1. [`docs/PROJECT_HANDOFF.md`](docs/PROJECT_HANDOFF.md) — 現在状態、検証済み事実、次のスライス、配備境界
 2. [`docs/PRODUCT_BOUNDARY.md`](docs/PRODUCT_BOUNDARY.md) — 製品境界とSource Admission Policy
 
-現在のHighest-Value Sliceは、保存したentityだけを対象にした **My Stack単位の変更要約 v0** です。要件と禁止範囲は `docs/PROJECT_HANDOFF.md` を正本とし、新規Source、定期実行、cloud sync、通知、一般公開を同じスライスへ追加しないでください。
+My Stack単位の変更要約 v0はGitHub source実装と全自動検証まで完了しています。現在のHighest-Value Sliceは **Browser acceptanceと既存owner-only Siteへのcheckpoint deployment** です。要件と未実施境界は `docs/PROJECT_HANDOFF.md` を正本とし、新規Source、DB / 認証 / API変更、定期実行、cloud sync、通知、一般公開を同じスライスへ追加しないでください。
 
 ## 検証
 
@@ -27,7 +27,7 @@ npx tsc --noEmit
 git diff --check
 ```
 
-`npm test` はproduction build、rendered HTML tests、Observation / Evidence testsを実行します。依存変更時は `npm audit` も確認し、互換性を確認せず `npm audit fix --force` を実行しないでください。
+`npm test` はproduction build、rendered HTML tests、Observation / Evidence tests、My Stack変更要約testsを実行します。依存変更時は `npm audit` も確認し、互換性を確認せず `npm audit fix --force` を実行しないでください。
 
 ## 実装境界
 
