@@ -16,7 +16,7 @@ npm run dev
 1. [`docs/PROJECT_HANDOFF.md`](docs/PROJECT_HANDOFF.md) — 現在状態、検証済み事実、次のスライス、配備境界
 2. [`docs/PRODUCT_BOUNDARY.md`](docs/PRODUCT_BOUNDARY.md) — 製品境界とSource Admission Policy
 
-My Stack単位の変更要約 v0はGitHub source実装と全自動検証まで完了しています。現在のHighest-Value Sliceは **Browser acceptanceと既存owner-only Siteへのcheckpoint deployment** です。要件と未実施境界は `docs/PROJECT_HANDOFF.md` を正本とし、新規Source、DB / 認証 / API変更、定期実行、cloud sync、通知、一般公開を同じスライスへ追加しないでください。
+My Stack単位の変更要約 v0はGitHub source実装と全自動検証まで完了しています。現在のHighest-Value Sliceは **Browser acceptance**、続くgateは **production依存security decisionと既存owner-only Siteへのcheckpoint deployment** です。要件と未実施境界は `docs/PROJECT_HANDOFF.md` を正本とし、新規Source、DB / 認証 / API変更、定期実行、cloud sync、通知、一般公開を同じスライスへ追加しないでください。
 
 ## 検証
 
