@@ -53,7 +53,7 @@ export function SoftwareExplorer({ initial }: { initial: Initial }) {
           <FilterSelect label="証拠種別" value={evidence} onChange={setEvidence} options={["実機検証済み", "公式情報確認済み・実機未検証", "再現可能な第三者報告", "未確認"]} />
         </div>
       </section>
-      <div className="result-summary" aria-live="polite"><strong>{results.length}件</strong><span>用途別判定を表示しています。総合点や順位ではありません。</span></div>
+      <div className="result-summary" aria-live="polite"><strong>{results.length}件</strong><span>用途別の許諾条件と納品条件を表示しています。</span></div>
       {results.length ? <div className="result-grid">{results.map((record) => <SoftwareCard key={record.id} record={record} />)}</div> : <EmptyState onClear={clear} />}
     </>
   );
@@ -64,5 +64,5 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
 }
 
 function EmptyState({ onClear }: { onClear: () => void }) {
-  return <div className="empty-state"><span aria-hidden="true">0</span><h2>一致する公開レコードはありません</h2><p>条件を解除するか、別の語で検索してください。見つからない製品は「不適合」ではなく、まだ未調査の可能性があります。</p><button className="primary-button" type="button" onClick={onClear}>条件を解除する</button></div>;
+  return <div className="empty-state"><span aria-hidden="true">0</span><h2>一致する公開レコードはありません</h2><p>条件を解除するか、別の語で検索してください。未掲載の製品は調査状況が未確定です。</p><button className="primary-button" type="button" onClick={onClear}>条件を解除する</button></div>;
 }

@@ -6,5 +6,5 @@ export const metadata: Metadata = { title: "ソフト適合を比較", descripti
 export default async function ComparePage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const raw = (await searchParams).ids;
   const initialIds = typeof raw === "string" ? raw.split(",").filter(Boolean) : [];
-  return <div className="section-shell page-shell"><header className="page-intro"><p className="section-kicker">COMPARE CONDITIONS</p><h1>ソフト適合を比較</h1><p>点数や順位ではなく、用途ごとの許諾と納品条件を同じ軸で見比べます。</p></header><CompareClient initialIds={initialIds} /></div>;
+  return <div className="section-shell page-shell"><header className="page-intro"><p className="section-kicker">COMPARE CONDITIONS</p><h1>ソフト適合を比較</h1><p>用途ごとの許諾と納品条件を同じ軸で見比べます。</p></header><CompareClient initialIds={initialIds} /></div>;
 }

@@ -55,8 +55,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <main id="main-content">{children}</main>
         <footer className="site-footer">
           <div className="footer-inner">
-            <p><strong>Creator Stack Lab</strong> — 推測を結論にせず、条件と未知を保存する。</p>
-            <p>このサイトは法的助言ではありません。重要な利用前には原文と提供元へ再確認してください。</p>
+            <p><strong>Creator Stack Lab</strong> — 条件、未知、根拠を記録する。</p>
+            <p>重要な利用判断では、最新の原文と提供元の回答を確認してください。本サイトの情報は法的助言を構成しません。</p>
           </div>
         </footer>
         </MyStackProvider>

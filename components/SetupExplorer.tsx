@@ -50,8 +50,8 @@ export function SetupExplorer({ initial }: { initial: Initial }) {
           <SetupSelect label="判定状態" value={filters.verdict} onChange={set("verdict")} options={["適合", "条件付き適合", "不適合", "未確認"]} />
         </div>
       </section>
-      <div className="result-summary" aria-live="polite"><strong>{results.length}件</strong><span>製品単位ではなく、端末からアプリまでの経路単位です。</span></div>
-      {results.length ? <div className="result-grid">{results.map((record) => <SetupCard key={record.id} record={record} />)}</div> : <div className="empty-state"><span aria-hidden="true">0</span><h2>一致する構成はまだ登録されていません</h2><p>条件を解除してください。未登録の組合せは不適合を意味しません。</p><button className="primary-button" type="button" onClick={clear}>条件を解除する</button></div>}
+      <div className="result-summary" aria-live="polite"><strong>{results.length}件</strong><span>端末からアプリまでの経路単位で集計しています。</span></div>
+      {results.length ? <div className="result-grid">{results.map((record) => <SetupCard key={record.id} record={record} />)}</div> : <div className="empty-state"><span aria-hidden="true">0</span><h2>一致する構成はまだ登録されていません</h2><p>条件を解除してください。未登録の組合せは調査状況が未確定です。</p><button className="primary-button" type="button" onClick={clear}>条件を解除する</button></div>}
     </>
   );
 }

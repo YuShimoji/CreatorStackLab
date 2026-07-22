@@ -31,7 +31,7 @@ export default async function SoftwareDetailPage({ params }: { params: Promise<{
         <div><p className="section-kicker">{record.category.toUpperCase()}</p><h1>{record.name}</h1><p className="detail-developer">{record.developer} ・ {record.supportedPlatforms.join(" / ")}</p></div>
         <div className="detail-status"><VerdictBadge verdict={record.verdict} /><EvidenceBadge evidence={record.evidenceType} /><time dateTime={record.verifiedAt}>最終確認 {record.verifiedAt}</time></div>
       </header>
-      <section className="conclusion-box" aria-labelledby="conclusion-heading"><p className="section-kicker">SHORT ANSWER</p><h2 id="conclusion-heading">{record.summary}</h2><p>この判定は公式情報から確認できた範囲の整理であり、個別案件の法的保証ではありません。</p></section>
+      <section className="conclusion-box" aria-labelledby="conclusion-heading"><p className="section-kicker">SHORT ANSWER</p><h2 id="conclusion-heading">{record.summary}</h2><p>公式情報から確認できた範囲を整理しています。個別案件の法的判断は、提供元または専門家へ確認してください。</p></section>
       <EvidencePassport bundle={passport} />
 
       <div className="detail-layout">

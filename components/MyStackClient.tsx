@@ -60,13 +60,13 @@ export function MyStackClient() {
       <section className="observatory-section" aria-labelledby="my-stack-summary-heading">
         <div className="section-heading">
           <div><p className="section-kicker">SINCE YOUR LAST VISIT</p><h2 id="my-stack-summary-heading">前回訪問後の変更要約</h2></div>
-          <p>{previousVisit ? `比較基準：${formatMoment(previousVisit)}` : "初回表示のため、過去の差分は新着扱いせず基準観測として表示します。"}</p>
+          <p>{previousVisit ? `比較基準：${formatMoment(previousVisit)}` : "初回表示です。過去の差分は基準観測として表示します。"}</p>
         </div>
 
         {observationError && (
           <aside className="observation-alert" role="status" data-testid="my-stack-summary-error">
             <strong>観測データを表示できません。</strong>
-            <p>{observationError}。保存項目や最後に確認できた根拠を、正常・不変・障害へ読み替えません。</p>
+            <p>{observationError}。保存項目と最後に確認できた根拠は維持しています。観測状態は確認待ちです。</p>
           </aside>
         )}
 
@@ -74,7 +74,7 @@ export function MyStackClient() {
           observationLoading ? (
             <div className="empty-state compact-empty" aria-live="polite" data-testid="my-stack-summary-loading">
               <span aria-hidden="true">…</span><h2>変更要約を読み込んでいます</h2>
-              <p>観測Snapshotを確認できるまで、保存対象を変更なしとは判定しません。</p>
+              <p>観測Snapshotを確認できるまで、保存対象の状態は確認待ちです。</p>
             </div>
           ) : observationError ? null : (
             <div className="empty-state compact-empty">

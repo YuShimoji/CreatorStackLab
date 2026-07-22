@@ -1,6 +1,6 @@
 # Creator Stack Lab
 
-Creator Stack Lab / Creator Stack Observatory は、制作判断に必要な公式情報と外部証拠を、出典、適用条件、鮮度、変更履歴、未知とともに提示する owner-only の観測所です。実機レビュー、購買ランキング、一般障害監視、規約や適合性の自動判定には拡張しません。
+Creator Stack Lab / Creator Stack Observatory は、制作判断に必要な公式情報と外部証拠を、出典、適用条件、鮮度、変更履歴、未知とともに提示する owner-only の観測所です。対象外の領域は、実機レビュー、購買ランキング、一般障害監視、規約や適合性の自動判定です。
 
 ## 開発を再開する
 
@@ -27,7 +27,7 @@ npx tsc --noEmit
 git diff --check
 ```
 
-`npm test` はproduction build、rendered HTML tests、Observation / Evidence tests、My Stack変更要約testsを実行します。依存変更時は `npm audit` も確認し、互換性を確認せず `npm audit fix --force` を実行しないでください。
+`npm test` はproduction build、rendered HTML tests、Observation / Evidence tests、My Stack変更要約testsを実行します。依存変更時は `npm audit` も確認してください。`npm audit fix --force` は、互換性検証前の実行を禁止します。
 
 ## 実装境界
 
@@ -38,8 +38,8 @@ git diff --check
 - `worker/observation-runtime.ts`, `worker/index.ts`: owner APIとD1 read/write
 - `.openai/hosting.json`: 既存Sites identityとbinding。credentialやsecretは保存しない
 
-不明、矛盾、条件付き、stale、fetch failureを正式な状態として維持します。規約hashを規約の意味へ、Source取得失敗を製品障害へ、Source未接続を変更なしへ変換しないでください。
+不明、矛盾、条件付き、stale、fetch failureを正式な状態として維持します。規約hashは文書同一性の観測値です。Source取得失敗は `fetch_failed`、Source未接続は未確認として扱います。
 
 ## Git / deployment
 
-共同作業の正本はGitHub `origin/master`、配備mirrorは既存Sites source repositoryの `main` です。配備する場合は両者を同一SHAにし、既存owner-only Siteを再利用します。新規Site作成、credentialの永続化、owner-only設定の変更は行わず、完全な手順は [`docs/PROJECT_HANDOFF.md`](docs/PROJECT_HANDOFF.md) に従ってください。
+共同作業の正本はGitHub `origin/master`、配備mirrorは既存Sites source repositoryの `main` です。配備時は両者を同一SHAにし、既存owner-only Siteを再利用します。禁止事項は、新規Site作成、credentialの永続化、owner-only設定の変更です。完全な手順は [`docs/PROJECT_HANDOFF.md`](docs/PROJECT_HANDOFF.md) に従ってください。

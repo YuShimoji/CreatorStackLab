@@ -30,8 +30,8 @@ export default function Home() {
           </div>
           <aside className="scope-note" aria-label="このデータベースの読み方">
             <span className="scope-number">01</span>
-            <h2>おすすめ順ではなく、成立条件順。</h2>
-            <p>判定は「適合・条件付き適合・不適合・未確認」の4状態。情報がないことを不適合にしません。</p>
+            <h2>成立条件から選ぶ。</h2>
+            <p>判定は「適合・条件付き適合・不適合・未確認」の4状態。情報不足は「未確認」で表示します。</p>
           </aside>
         </div>
 

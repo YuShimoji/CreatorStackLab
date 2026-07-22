@@ -44,7 +44,7 @@ export const evidenceClaims: readonly Claim[] = [
     topic: "runtime_suitability",
     statement: "配信・録画の成立性は、解像度、FPS、エンコーダー、素材、端末負荷を固定して確認する必要がある。",
     epistemicStatus: "conditional",
-    scope: "カタログ上の構成判断。公式要件だけで個別端末の性能を保証しない。",
+    scope: "カタログ上の構成判断。個別端末の性能は実機確認が必要。",
     applicableVersions: ["current documentation"],
     applicablePlatforms: ["Windows", "macOS", "Linux"],
     evidenceRefs: ["evidence-obs-system-requirements", "evidence-obs-recording-guide"],
@@ -176,7 +176,7 @@ export const evidenceReferences: readonly EvidenceReference[] = [
     sourceUrl: "https://obsproject.com/kb/system-requirements",
     observedAt: "2026-07-16",
     appliesTo: "対応OSと公式要件",
-    summary: "公式要件は対応範囲を示すが、個別構成の性能保証ではない。",
+    summary: "公式要件は対応範囲を示す。個別構成の性能は実機確認が必要。",
     receiptReference: "catalog review 2026-07-16",
   },
   {
@@ -213,7 +213,7 @@ export const evidenceReferences: readonly EvidenceReference[] = [
     sourceId: "voicevox-software-terms",
     observedAt: "2026-07-16",
     appliesTo: "VOICEVOXソフトウェア本体の利用条件",
-    summary: "カタログ登録時の人手確認と本文hash観測を分離する。hash変化だけでは規約の意味や商用可否を更新しない。",
+    summary: "カタログ登録時の人手確認と本文hash観測を分離する。hashは文書同一性の観測値。規約の意味と商用可否は人が確認する。",
     receiptReference: "catalog review + D1 content hash receipt",
   },
   {
@@ -225,7 +225,7 @@ export const evidenceReferences: readonly EvidenceReference[] = [
     sourceUrl: "https://status.twitch.com/api/v2/status.json",
     sourceId: "twitch-status",
     appliesTo: "Twitchの公式サービス状態",
-    summary: "公式Statuspage APIのサービス状態だけを観測し、機材構成や回線の適合へ変換しない。",
+    summary: "公式Statuspage APIのサービス状態を観測する。機材構成と回線の適合は観測対象外。",
     receiptReference: "D1 observation receipt",
   },
 ] as const;

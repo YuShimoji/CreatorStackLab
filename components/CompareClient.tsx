@@ -39,7 +39,7 @@ export function CompareClient({ initialIds }: { initialIds: string[] }) {
 
   return <>
     <section className="compare-picker" aria-labelledby="compare-picker-heading">
-      <div><h2 id="compare-picker-heading">比較するソフトを2〜3件選択</h2><p>選択中 {selected.length} / 3件。点数ではなく、条件の差を比較します。</p></div>
+      <div><h2 id="compare-picker-heading">比較するソフトを2〜3件選択</h2><p>選択中 {selected.length} / 3件。用途ごとの条件差を比較します。</p></div>
       <button type="button" onClick={() => setSelected([])} disabled={!selected.length}>すべて解除</button>
       <div className="compare-options">{softwareRecords.map((record) => { const checked = selected.includes(record.id); return <label key={record.id} className={checked ? "is-selected" : ""}><input type="checkbox" checked={checked} disabled={!checked && selected.length >= 3} onChange={() => toggle(record.id)} /><span><strong>{record.name}</strong><small>{record.category}</small></span><VerdictBadge verdict={record.verdict} /></label>; })}</div>
     </section>

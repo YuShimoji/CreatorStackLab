@@ -259,7 +259,7 @@ export function describeChange(
       newValues: pick(comparableNext, changedFields),
       materiality: "commercial_terms_relevant",
       reviewStatus: "pending",
-      reason: "公式利用規約の正規化本文ハッシュが変化しました。意味・適用範囲は自動断定しません。",
+      reason: "公式利用規約の正規化本文ハッシュが変化しました。意味・適用範囲は人の確認待ちです。",
       requiredAction: "公式原文を比較し、権利・表示・納品条件への影響を人が確認する",
     };
   }

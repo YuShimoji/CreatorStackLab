@@ -65,7 +65,7 @@ export function EvidencePassport({ bundle }: { bundle: EvidencePassportBundle })
           <div><p className="section-kicker">EVIDENCE PASSPORT v0</p><h2 id="evidence-passport-heading">判断根拠</h2></div>
           <span className="epistemic-badge is-unknown">未確認</span>
         </header>
-        <p>この対象には、現在のSource Registryへ直接接続できるClaimがありません。カタログ情報は表示しますが、公式観測済みとは扱いません。</p>
+        <p>この対象には、現在のSource Registryへ直接接続できるClaimがありません。表示内容はカタログ情報です。公式観測の状態は未確認です。</p>
       </section>
     );
   }
@@ -105,7 +105,7 @@ export function EvidencePassport({ bundle }: { bundle: EvidencePassportBundle })
       </section>
 
       <section className="passport-section" aria-labelledby="passport-evidence-heading">
-        <div className="passport-section-heading"><span>02</span><div><h3 id="passport-evidence-heading">根拠</h3><p>公式性と取得方法を明示し、実機試験と文書確認を混同しません。</p></div></div>
+        <div className="passport-section-heading"><span>02</span><div><h3 id="passport-evidence-heading">根拠</h3><p>公式性と取得方法を明示します。実機試験と文書確認は別の証拠種別です。</p></div></div>
         <div className="passport-evidence-list">
           {passport.evidence.map((evidence) => (
             <article key={evidence.evidenceId}>
@@ -140,10 +140,10 @@ export function EvidencePassport({ bundle }: { bundle: EvidencePassportBundle })
         <div className="passport-limit-columns">
           <LimitList title="成立条件" items={passport.conditions} empty="追加条件は未登録" />
           <LimitList title="未確認部分" items={passport.unknowns} empty="未確認項目は未登録" />
-          <LimitList title="この根拠から結論できないこと" items={passport.limits} empty="限界は未登録" />
+          <LimitList title="この根拠の適用外" items={passport.limits} empty="限界は未登録" />
         </div>
-        {passport.evidence.some((item) => item.sourceStatus === "fetch_failed") && <p className="passport-warning">取得失敗があります。最後の成功値は保持していますが、サービス障害とは判定していません。</p>}
-        {passport.evidence.some((item) => item.sourceStatus === "stale") && <p className="passport-warning">鮮度期限を超えた根拠があります。現在情報として扱わず、再確認が必要です。</p>}
+        {passport.evidence.some((item) => item.sourceStatus === "fetch_failed") && <p className="passport-warning">取得失敗があります。最後の成功値を保持しています。サービスの稼働状態は未確認です。</p>}
+        {passport.evidence.some((item) => item.sourceStatus === "stale") && <p className="passport-warning">鮮度期限を超えた根拠があります。状態は再確認待ちです。</p>}
       </section>
 
       <section className="passport-section" id="history" aria-labelledby="passport-history-heading">

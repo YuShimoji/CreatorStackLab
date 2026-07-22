@@ -23,10 +23,10 @@ export function ChangeRadar() {
     <div className="source-layer-legend" aria-label="変更レイヤーの凡例"><span>実観測：D1の差分</span><span>公式文書：登録済み事実</span><span>表示サンプル：0件・集計外</span><span>取得失敗：サービス障害と分離</span></div>
 
     <section className="radar-section" aria-labelledby="actual-change-heading">
-      <div className="section-heading"><div><p className="section-kicker">REAL OBSERVATION CHANGES</p><h2 id="actual-change-heading">実観測で検出した変化</h2></div><p>同じ hash、304、同じ前後組合せは重複イベントにしません。</p></div>
+      <div className="section-heading"><div><p className="section-kicker">REAL OBSERVATION CHANGES</p><h2 id="actual-change-heading">実観測で検出した変化</h2></div><p>同じhash、304、同じ前後組合せは1件に集約します。</p></div>
       {error && <aside className="observation-alert"><strong>実観測を取得できません。</strong><p>{error}</p></aside>}
-      {failures.map((source) => <aside className="observation-alert" key={source.id}><strong>{source.title}：取得失敗</strong><p>最後に成功した値は保持しています。提供サービスの停止や不適合とは判定していません。</p></aside>)}
-      {actualChanges.length ? <div className="radar-list">{actualChanges.map((item) => <ActualChangeCard item={item} key={item.id} />)}</div> : <div className="empty-state compact-empty"><span aria-hidden="true">{loading ? "…" : "0"}</span><h2>{loading ? "実観測を読み込んでいます" : "意味のある実変更は未検出です"}</h2><p>初回取得は基準値として保存し、変更イベントにはしません。</p></div>}
+      {failures.map((source) => <aside className="observation-alert" key={source.id}><strong>{source.title}：取得失敗</strong><p>最後に成功した値を保持しています。提供サービスの稼働状態と適合性は未確認です。</p></aside>)}
+      {actualChanges.length ? <div className="radar-list">{actualChanges.map((item) => <ActualChangeCard item={item} key={item.id} />)}</div> : <div className="empty-state compact-empty"><span aria-hidden="true">{loading ? "…" : "0"}</span><h2>{loading ? "実観測を読み込んでいます" : "意味のある実変更は未検出です"}</h2><p>初回取得は基準値として保存します。変更イベントは2回目以降の差分から作成します。</p></div>}
     </section>
 
     <section className="radar-section" aria-labelledby="registered-change-heading">
@@ -47,7 +47,7 @@ function ActualChangeCard({ item }: { item: ObservationChangeView }) {
   return <article className={`radar-card ${pending ? "severity-high" : "severity-medium"}`}>
     <header><div><span className="record-type">実観測 ・ {reviewLabels[item.reviewStatus]}</span><h2>{item.sourceTitle}</h2></div><time dateTime={item.detectedAt}>{formatMoment(item.detectedAt)}</time></header>
     <dl className="before-after"><div><dt>変更前</dt><dd>{summarizeValues(item.previousValues)}</dd></div><div><dt>変更後</dt><dd>{summarizeValues(item.newValues)}</dd></div></dl>
-    <p className="change-impact"><strong>扱い</strong>{pending ? "規約・商用条件の意味は未反映です。公式原文の人手確認が必要です。" : `公式の機械可読事実として反映しました（${item.materiality}）。Catalogの適合判定は変更していません。`}</p>
+    <p className="change-impact"><strong>扱い</strong>{pending ? "規約・商用条件の意味は確認待ちです。公式原文を人が確認します。" : `公式の機械可読事実として反映しました（${item.materiality}）。Catalogの適合判定は現状を維持します。`}</p>
     <footer><span>{reviewLabels[item.reviewStatus]}</span><a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">公式ソース ↗</a>{catalog && <Link href={`${catalog.href}#history`}>対象の履歴へ →</Link>}</footer>
   </article>;
 }

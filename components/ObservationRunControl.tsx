@@ -34,7 +34,7 @@ export function ObservationRunControl({ lastRun }: { lastRun?: ObservationRunVie
       <div>
         <p className="section-kicker">OWNER-ONLY OBSERVATION RUN</p>
         <h2 id="run-control-heading">公式ソースをいま確認</h2>
-        <p>定期実行は装っていません。Twitchは30分、リリースは12時間、規約は7日を確認目標にした手動実行です。</p>
+        <p>実行方式はownerによる手動操作です。確認目標はTwitch 30分、リリース12時間、規約7日です。</p>
         {lastRun && <small>前回 {formatMoment(lastRun.finishedAt ?? lastRun.startedAt)} ・ {lastRun.status} ・ 成功 {lastRun.successCount}/{lastRun.sourceCount}</small>}
         {message && <p className="run-message" aria-live="polite">{message}</p>}
       </div>

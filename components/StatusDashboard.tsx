@@ -18,7 +18,7 @@ const healthLabels: Record<ObservationSourceView["status"], string> = {
 export function StatusDashboard() {
   const { ids, ready, previousVisit } = useMyStack();
   const { snapshot, loading: observationLoading, error: observationError } = useObservationSnapshot();
-  if (!ready) return <><section className="today-hero"><div><p className="section-kicker">CREATOR STACK OBSERVATORY</p><h1>今日の制作環境</h1><p>このブラウザのMy Stackを読み込んでいます。</p></div></section><div className="empty-state compact-empty" aria-live="polite"><span aria-hidden="true">…</span><h2>保存内容を確認中</h2><p>読み込みが終わるまで、状態を正常・異常のどちらにも数えません。</p></div></>;
+  if (!ready) return <><section className="today-hero"><div><p className="section-kicker">CREATOR STACK OBSERVATORY</p><h1>今日の制作環境</h1><p>このブラウザのMy Stackを読み込んでいます。</p></div></section><div className="empty-state compact-empty" aria-live="polite"><span aria-hidden="true">…</span><h2>保存内容を確認中</h2><p>状態集計は読み込み完了後に始まります。</p></div></>;
 
   const catalog = listCatalog().filter((item) => ids.includes(item.id));
   const statuses = listStatuses().filter((item) => ids.includes(item.catalogId) && item.sourceMode !== "sample");
@@ -50,7 +50,7 @@ export function StatusDashboard() {
       </section>
 
       <ObservationRunControl lastRun={snapshot?.runs[0]} />
-      {observationError && <aside className="observation-alert" role="status"><strong>観測データを表示できません。</strong><p>{observationError}。Catalogの判定や最後に確認できた公式文書を障害へ読み替えません。</p></aside>}
+      {observationError && <aside className="observation-alert" role="status"><strong>観測データを表示できません。</strong><p>{observationError}。Catalogの判定と最後に確認できた公式文書は維持しています。観測状態は確認待ちです。</p></aside>}
 
       <section className="metric-grid" aria-label="My Stackの要約">
         <article><span>NORMAL / NO CHANGE</span><strong>{normal}</strong><p>公式ライブで正常確認</p></article>
@@ -64,17 +64,17 @@ export function StatusDashboard() {
 
       <section className="observatory-section" aria-labelledby="live-sources-heading">
         <div className="section-heading"><div><p className="section-kicker">REAL OBSERVATIONS</p><h2 id="live-sources-heading">公式ソースの現在値</h2></div><p>取得状態と提供元の状態を分離し、最後に成功した公式値を保持します。</p></div>
-        {actualSources.length ? <div className="observation-source-grid">{actualSources.map((source) => <ObservationSourceCard source={source} key={source.id} />)}</div> : <div className="empty-state compact-empty"><span aria-hidden="true">{observationLoading ? "…" : "0"}</span><h2>{observationLoading ? "実観測を読み込んでいます" : "実観測はまだありません"}</h2><p>観測実行後も Catalog の判定は自動で書き換えません。</p></div>}
+        {actualSources.length ? <div className="observation-source-grid">{actualSources.map((source) => <ObservationSourceCard source={source} key={source.id} />)}</div> : <div className="empty-state compact-empty"><span aria-hidden="true">{observationLoading ? "…" : "0"}</span><h2>{observationLoading ? "実観測を読み込んでいます" : "実観測はまだありません"}</h2><p>観測結果は履歴へ保存します。Catalogの判定更新には別の確認工程があります。</p></div>}
       </section>
 
-      {snapshot?.reviews.length ? <section className="observatory-section" aria-labelledby="review-heading"><div className="section-heading"><div><p className="section-kicker">REVIEW QUEUE</p><h2 id="review-heading">人の確認が必要な変化</h2></div><p>規約の hash 変化は、意味を確認するまで判定へ反映しません。</p></div><div className="review-list">{snapshot.reviews.map((review) => <article key={review.id}><span>要レビュー</span><h3>{review.sourceTitle}</h3><p>{review.reason}</p><strong>{review.requiredAction}</strong><a href={review.sourceUrl} target="_blank" rel="noopener noreferrer">公式原文を開く ↗</a></article>)}</div></section> : null}
+      {snapshot?.reviews.length ? <section className="observatory-section" aria-labelledby="review-heading"><div className="section-heading"><div><p className="section-kicker">REVIEW QUEUE</p><h2 id="review-heading">人の確認が必要な変化</h2></div><p>規約のhash変化は意味の確認待ちです。人の確認後に判定を更新します。</p></div><div className="review-list">{snapshot.reviews.map((review) => <article key={review.id}><span>要レビュー</span><h3>{review.sourceTitle}</h3><p>{review.reason}</p><strong>{review.requiredAction}</strong><a href={review.sourceUrl} target="_blank" rel="noopener noreferrer">公式原文を開く ↗</a></article>)}</div></section> : null}
 
       <section className="observatory-section" aria-labelledby="important-heading"><div className="section-heading"><div><p className="section-kicker">REGISTERED CHANGES</p><h2 id="important-heading">影響の大きい変更</h2></div><Link className="text-link" href="/changes">変更レーダーをすべて見る →</Link></div>
         <div className="change-list">{visibleChanges.map((item) => <article key={item.id} className={`change-row severity-${item.severity}`}><div><span>{item.type}</span><h3>{item.subject}</h3></div><p>{item.impact}</p><time dateTime={item.changedAt}>{item.changedAt}</time></article>)}</div>
       </section>
 
-      <section className="observatory-section" aria-labelledby="status-heading"><div className="section-heading"><div><p className="section-kicker">DOCUMENT / SAMPLE LAYER</p><h2 id="status-heading">登録済み状態と出典</h2></div><p>「不明」は障害ではありません。サンプルは実観測数に含めません。</p></div>
-        {visibleStatuses.length ? <div className="status-grid">{visibleStatuses.map((item) => <article key={item.id} className={`status-card status-${item.status}`}><div className="card-topline"><span className="record-type">{sourceLabels[item.sourceMode]}</span><strong>{statusLabels[item.status]}</strong></div><h3>{item.subject}</h3><p>{item.impactedFeature}</p><small>{item.note}</small><div className="evidence-line"><a href={item.source.url}>{item.source.label}</a><time dateTime={item.checkedAt}>確認 {item.checkedAt}</time></div></article>)}</div> : <div className="empty-state compact-empty"><span aria-hidden="true">—</span><h2>登録項目の状態ソースはまだありません</h2><p>未接続を正常とは扱いません。My Stackの詳細と変更履歴は引き続き確認できます。</p></div>}
+      <section className="observatory-section" aria-labelledby="status-heading"><div className="section-heading"><div><p className="section-kicker">DOCUMENT / SAMPLE LAYER</p><h2 id="status-heading">登録済み状態と出典</h2></div><p>「不明」は確認待ちの状態です。サンプルは実観測数から除外しています。</p></div>
+        {visibleStatuses.length ? <div className="status-grid">{visibleStatuses.map((item) => <article key={item.id} className={`status-card status-${item.status}`}><div className="card-topline"><span className="record-type">{sourceLabels[item.sourceMode]}</span><strong>{statusLabels[item.status]}</strong></div><h3>{item.subject}</h3><p>{item.impactedFeature}</p><small>{item.note}</small><div className="evidence-line"><a href={item.source.url}>{item.source.label}</a><time dateTime={item.checkedAt}>確認 {item.checkedAt}</time></div></article>)}</div> : <div className="empty-state compact-empty"><span aria-hidden="true">—</span><h2>登録項目の状態ソースはまだありません</h2><p>状態は未確認です。My Stackの詳細と変更履歴は確認できます。</p></div>}
       </section>
     </>
   );
@@ -96,7 +96,7 @@ function ObservationSourceCard({ source }: { source: ObservationSourceView }) {
     <h3>{source.title}</h3>
     <p className="observed-value">{official ? `公式状態：${official}` : version ? `最新版：${version}` : isTerms ? "規約本文：hash確認済み・意味は未判定" : "公式値は未取得"}</p>
     {description && <small>{description}</small>}
-    {source.status === "fetch_failed" && <p className="fetch-separation">取得失敗です。Twitchや製品自体の障害を意味しません。</p>}
+    {source.status === "fetch_failed" && <p className="fetch-separation">取得失敗です。Twitchや製品自体の稼働状態は未確認です。</p>}
     <dl>
       <div><dt>最終成功</dt><dd>{formatMoment(source.lastSuccessfulFetchAt)}</dd></div>
       <div><dt>最終試行</dt><dd>{formatMoment(source.lastCheckedAt)}</dd></div>

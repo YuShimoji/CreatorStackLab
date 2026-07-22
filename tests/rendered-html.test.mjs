@@ -106,5 +106,5 @@ test("renders Evidence Passport for connected entities and an unknown boundary e
   const passportSource = await readFile(new URL("../components/EvidencePassport.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(passportSource, /承認|却下|差し替え/);
   assert.match(passportSource, /取得失敗・最終成功値を保持/);
-  assert.match(passportSource, /サービス障害とは判定していません/);
+  assert.match(passportSource, /サービスの稼働状態は未確認です/);
 });

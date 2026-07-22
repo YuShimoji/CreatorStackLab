@@ -82,7 +82,7 @@ test("fetch failure never becomes a product or service outage verdict", () => {
     }),
   });
   assert.equal(result[0].primaryState, "fetch_failed");
-  assert.match(result[0].reason, /製品・サービス障害ではありません/);
+  assert.match(result[0].reason, /製品・サービスの稼働状態は判定対象外です/);
 });
 
 test("source-less catalog records are unavailable, not unchanged", () => {
@@ -94,7 +94,7 @@ test("source-less catalog records are unavailable, not unchanged", () => {
   });
   assert.equal(result[0].primaryState, "source_unavailable");
   assert.equal(result[0].sources[0].sourceId, null);
-  assert.match(result[0].reason, /変更なしとして扱いません/);
+  assert.match(result[0].reason, /観測状態は未確認です/);
 });
 
 test("multiple VOICEVOX sources retain every source-level state", () => {
@@ -132,7 +132,7 @@ test("multiple VOICEVOX sources retain every source-level state", () => {
   assert.ok(result[0].sources.some((entry) => entry.signals.some((signal) => signal.state === "review_pending")));
 });
 
-test("missing previousVisit treats history as a baseline instead of a new change", () => {
+test("missing previousVisit yields a baseline history", () => {
   const result = buildMyStackChangeSummaries({
     catalog,
     savedIds: ["sw-obs"],
@@ -143,7 +143,7 @@ test("missing previousVisit treats history as a baseline instead of a new change
     }),
   });
   assert.equal(result[0].primaryState, "baseline_only");
-  assert.match(result[0].reason, /過去の変更を新着扱いせず/);
+  assert.match(result[0].reason, /過去の変更を基準観測として表示します/);
 });
 
 test("absence of bounded history is not inferred as unchanged", () => {
@@ -156,7 +156,7 @@ test("absence of bounded history is not inferred as unchanged", () => {
     }),
   });
   assert.equal(result[0].primaryState, "baseline_only");
-  assert.match(result[0].reason, /変更なしとは判定しません/);
+  assert.match(result[0].reason, /比較状態は未確定です/);
 });
 
 test("stale state is dated from the successful-fetch freshness boundary", () => {

@@ -244,7 +244,7 @@ function pendingChangeSignal(source: ObservationSourceView, change: ObservationC
   return {
     state: "review_pending",
     occurredAt: change.detectedAt,
-    reason: `${source.title}で${formatFields(change.changedFields)}の差分を検出しました。意味は自動判定していません。`,
+    reason: `${source.title}で${formatFields(change.changedFields)}の差分を検出しました。意味は人の確認待ちです。`,
     nextAction: "変更履歴と公式原文を開き、人が意味と適用条件を確認してください。",
   };
 }
@@ -281,7 +281,7 @@ function fetchFailureSignal(source: ObservationSourceView, history: ObservationH
   return {
     state: "fetch_failed",
     occurredAt: failure?.observedAt ?? source.lastCheckedAt,
-    reason: `${source.title}の取得に失敗しています。最後の成功値は保持しますが、製品・サービス障害ではありません。`,
+    reason: `${source.title}の取得に失敗しています。最後の成功値を保持しています。製品・サービスの稼働状態は判定対象外です。`,
     nextAction: "Evidence Passportの最終成功値と取得履歴を確認し、公式Sourceを再観測してください。",
   };
 }
@@ -290,7 +290,7 @@ function staleSignal(source: ObservationSourceView): MyStackSourceSignal {
   return {
     state: "stale",
     occurredAt: staleSince(source),
-    reason: `${source.title}の最後の成功値が鮮度期限を超えています。現在値として扱いません。`,
+    reason: `${source.title}の最後の成功値が鮮度期限を超えています。状態は再確認待ちです。`,
     nextAction: "公式Sourceを再観測し、更新できるまで条件付きまたは不明として扱ってください。",
   };
 }
@@ -299,7 +299,7 @@ function unchangedSignal(source: ObservationSourceView, occurredAt: string | nul
   return {
     state: "unchanged_since_visit",
     occurredAt,
-    reason: `${source.title}では前回訪問後の成功観測で意味のある変更を検出していません。安全・適合・リスクなしを意味しません。`,
+    reason: `${source.title}では前回訪問後の成功観測で意味のある変更を検出していません。安全性、適合性、リスクは別途確認が必要です。`,
     nextAction: "Evidence Passportで成立条件、未知、鮮度を引き続き確認してください。",
   };
 }
@@ -317,10 +317,10 @@ function baselineSignal(
     state: "baseline_only",
     occurredAt: latestHistory?.observedAt ?? source.lastSuccessfulFetchAt ?? source.lastCheckedAt,
     reason: noPreviousVisit
-      ? `${source.title}は前回訪問時刻がないため、過去の変更を新着扱いせず基準観測として表示します。`
+      ? `${source.title}には前回訪問時刻がありません。過去の変更を基準観測として表示します。`
       : baselineAfterVisit
-        ? `${source.title}は前回訪問後に初回基準を取得しました。比較対象がないため変更なしとは判定しません。`
-        : `${source.title}は前回訪問後の成功観測履歴を確認できません。変更なしとは判定しません。`,
+        ? `${source.title}は前回訪問後に初回基準を取得しました。比較状態は未確定です。`
+        : `${source.title}は前回訪問後の成功観測履歴を確認できません。比較状態は未確定です。`,
     nextAction: "次の公式観測後に比較し、現時点ではEvidence Passportの根拠と未知を確認してください。",
   };
 }
@@ -330,8 +330,8 @@ function unavailableSourceSignal(source: ObservationSourceView): MyStackSourceSi
     state: "source_unavailable",
     occurredAt: source.lastCheckedAt,
     reason: source.status === "disabled"
-      ? `${source.title}は無効です。Source未接続を変更なしとして扱いません。`
-      : `${source.title}には利用可能な公式観測がありません。未観測を変更なしとして扱いません。`,
+      ? `${source.title}は無効です。観測状態は未確認です。`
+      : `${source.title}には利用可能な公式観測がありません。観測状態は未確認です。`,
     nextAction: "対象詳細で接続済み根拠と未確認境界を確認してください。",
   };
 }
@@ -340,7 +340,7 @@ function catalogOnlySource(): MyStackSourceSummary {
   const signal: MyStackSourceSignal = {
     state: "source_unavailable",
     occurredAt: null,
-    reason: "現在のSource Registryへ直接接続されていないCatalog項目です。Source未接続を変更なしとして扱いません。",
+    reason: "現在のSource Registryへ直接接続されていないCatalog項目です。観測状態は未確認です。",
     nextAction: "対象詳細でCatalog根拠と未確認境界を確認してください。",
   };
   return {

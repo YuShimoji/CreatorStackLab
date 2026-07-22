@@ -12,7 +12,7 @@ export default async function SoftwareListPage({ searchParams }: { searchParams:
   const one = (key: string) => typeof params[key] === "string" ? params[key] as string : "";
   return (
     <div className="section-shell page-shell">
-      <header className="page-intro"><p className="section-kicker">RIGHTS & OUTPUT</p><h1>ソフト適合</h1><p>「何が一番良いか」ではなく、あなたの用途でどの条件を満たせば使えるかを確認します。</p></header>
+      <header className="page-intro"><p className="section-kicker">RIGHTS & OUTPUT</p><h1>ソフト適合</h1><p>用途ごとに必要な許諾、表記、納品条件を確認します。</p></header>
       <SoftwareExplorer initial={{ q: one("q"), category: one("category"), platform: one("platform"), purpose: one("purpose"), verdict: one("verdict"), attribution: one("attribution"), format: one("format"), evidence: one("evidence") }} />
     </div>
   );

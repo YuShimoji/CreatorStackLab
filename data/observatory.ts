@@ -11,7 +11,7 @@ export const statusRecords: StatusRecord[] = [
     checkedAt: "2026-07-16",
     sourceMode: "official_document",
     source: { label: "Adobe Premiere リリースノート", url: "https://helpx.adobe.com/premiere/desktop/whats-new/release-notes.html", type: "公式情報" },
-    note: "公式の更新文書は確認済み。Adobe Status APIはOAuth/APIキーが必要なため、ライブ障害状態は接続していません。",
+    note: "公式の更新文書は確認済み。Adobe Status APIはOAuth/APIキーが必要です。ライブ障害状態は未接続です。",
   },
   {
     id: "status-final-cut-runtime",
@@ -23,7 +23,7 @@ export const statusRecords: StatusRecord[] = [
     checkedAt: "2026-07-16",
     sourceMode: "official_document",
     source: { label: "Apple Final Cut Pro リリースノート", url: "https://support.apple.com/ja-jp/102825", type: "公式情報" },
-    note: "公式リリースノートは確認済み。アプリの現在稼働状態を示す公開機械可読ソースは接続していません。",
+    note: "公式リリースノートは確認済み。アプリの現在稼働状態を示す公開機械可読ソースは未接続です。",
   },
   {
     id: "status-voicevox-runtime",
@@ -47,7 +47,7 @@ export const statusRecords: StatusRecord[] = [
     checkedAt: "2026-07-16",
     sourceMode: "sample",
     source: { label: "検証方針", url: "/policy", type: "公式情報" },
-    note: "表示確認専用サンプルです。OBS Studioや外部サービスの実際のメンテナンスを示しません。",
+    note: "表示確認専用サンプルです。実在するOBS Studioや外部サービスのメンテナンス情報は含みません。",
   },
 ];
 
@@ -94,7 +94,7 @@ export const changeRecords: ChangeRecord[] = [
     severity: "high",
     before: "eLicenserベースのライセンスサービスを提供",
     after: "eLicenserサービスを終了し、Steinberg Licensingへ移行",
-    impact: "旧Steinberg製品を含む制作環境では、再アクティベーションや移行可否を事前に確認する必要があります。UR22C本体のUSBオーディオ機能停止を意味しません。",
+    impact: "旧Steinberg製品を含む制作環境では、再アクティベーションや移行可否を事前に確認する必要があります。UR22C本体のUSBオーディオ機能はこの告知の対象外です。",
     sourceMode: "official_document",
     source: { label: "Steinberg — eLicenser Service Closes Down in 2025", url: "https://www.steinberg.net/licensing/elicenser-end-of-service/", type: "公式情報" },
     confirmation: "confirmed",
